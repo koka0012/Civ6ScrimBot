@@ -1,5 +1,6 @@
 class Command {
-  constructor(client, {
+
+  constructor (client, {
     name = null,
     description = "No description provided.",
     category = "Miscellaneous",

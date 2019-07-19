@@ -106,6 +106,27 @@ class GuideBot extends Client {
     return false;
   }
 
+  /*
+  MESSAGE CLEAN FUNCTION
+  "Clean" removes @everyone pings, as well as tokens, and makes code blocks
+  escaped so they're shown more easily. As a bonus it resolves promises
+  and stringifies objects!
+  This is mostly only used by the Eval and Exec commands.
+  */
+  async clean (text) {
+    if (text && text.constructor.name == "Promise")
+      text = await text;
+    if (typeof evaled !== "string")
+      text = require("util").inspect(text, { depth: 1 });
+
+    text = text
+      .replace(/`/g, "`" + String.fromCharCode(8203))
+      .replace(/@/g, "@" + String.fromCharCode(8203))
+      .replace(this.token, "mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0");
+
+    return text;
+  };
+
   /* SETTINGS FUNCTIONS
   These functions are used by any and all location in the bot that wants to either
   read the current *complete* guild settings (default + overrides, merged) or that
@@ -164,7 +185,6 @@ class GuideBot extends Client {
 // some might call it `cootchie`. Either way, when you see `client.something`,
 // or `bot.something`, this is what we're refering to. Your client.
 const client = new GuideBot();
-console.log(client.config.permLevels.map(p => `${p.level} : ${p.name}`));
 
 // We're doing real fancy node 8 async/await stuff here, and to do that
 // we need to wrap stuff in an anonymous function. It's annoying but it works.
@@ -216,7 +236,7 @@ client.on("disconnect", () => client.logger.warn("Bot is disconnecting..."))
 // EXTENDING NATIVE TYPES IS BAD PRACTICE. Why? Because if JavaScript adds this
 // later, this conflicts with native code. Also, if some other lib you use does
 // this, a conflict also occurs. KNOWING THIS however, the following methods
-// are, we feel, very useful in code. 
+// are, we feel, very useful in code. So let's just Carpe Diem.
 
 // <String>.toPropercase() returns a proper-cased string such as: 
 // "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
