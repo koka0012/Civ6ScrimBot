@@ -15,7 +15,7 @@ const defaultSettings = {
   "welcomeEnabled": "false"
 };
 
-const settings = new Enmap({name: "settings", cloneLevel: "deep"});
+const settings = new Enmap({ name: "settings", cloneLevel: "deep" });
 
 (async function () {
   console.log("Setting Up GuideBot Configuration... CTRL+C if you want to manually edit config.js.example into config.js!");
@@ -33,7 +33,7 @@ const settings = new Enmap({name: "settings", cloneLevel: "deep"});
 
   baseConfig = baseConfig
     .replace("{{defaultSettings}}", JSON.stringify(defaultSettings, null, 2))
-    .replace("{{token}}", `"${token}"`)
+    .replace("{{token}}", `"${token}"`);
   
   fs.writeFileSync("./config.js", baseConfig);
   console.log("REMEMBER TO NEVER SHARE YOUR TOKEN WITH ANYONE!");

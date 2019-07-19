@@ -116,7 +116,7 @@ class GuideBot extends Client {
   async clean (text) {
     if (text && text.constructor.name == "Promise")
       text = await text;
-    if (typeof evaled !== "string")
+    if (typeof text !== "string")
       text = require("util").inspect(text, { depth: 1 });
 
     text = text
@@ -125,7 +125,7 @@ class GuideBot extends Client {
       .replace(this.token, "mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0");
 
     return text;
-  };
+  }
 
   /* SETTINGS FUNCTIONS
   These functions are used by any and all location in the bot that wants to either
