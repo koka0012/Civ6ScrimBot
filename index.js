@@ -137,7 +137,7 @@ class GuideBot extends Client {
   // enmap should only have *unique* overrides that are different from defaults.
   getSettings (guild) {
     const defaults = this.settings.get("default") || {};
-    const guildData = this.settings.get(guild.id) || {};
+    const guildData = guild ? this.settings.get(guild.id) || {} : {};
     const returnObject = {};
     Object.keys(defaults).forEach((key) => {
       returnObject[key] = guildData[key] ? guildData[key] : defaults[key];
