@@ -6,7 +6,7 @@
     "es6": true,
     "node": true
   },
-  "extends": "eslint:recommended",
+  "extends": ["eslint:recommended", "prettier"],
   "rules": {
     "no-console": "off",
     "indent": [
@@ -16,36 +16,34 @@
         "SwitchCase": 1
       }
     ],
-    "quotes": [
-      "warn",
-      "double"
-    ],
-    "semi": [
-      "warn",
-      "always"
-    ],
+    "quotes": ["warn", "single"],
+    "semi": ["warn", "always"],
     "keyword-spacing": [
-      "error", {
+      "error",
+      {
         "before": true,
         "after": true
       }
     ],
     "space-before-blocks": [
-      "error", {
-        "functions":"always",
+      "error",
+      {
+        "functions": "always",
         "keywords": "always",
         "classes": "always"
       }
     ],
     "space-before-function-paren": [
-      "error", {
+      "error",
+      {
         "anonymous": "always",
         "named": "always",
         "asyncArrow": "always"
       }
     ],
     "prefer-const": [
-      "error", {
+      "error",
+      {
         "destructuring": "any",
         "ignoreReadBeforeAssign": false
       }
