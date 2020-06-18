@@ -1,16 +1,17 @@
 // This will check if the node version you are running is the required
 // Node version, if it isn't it will throw the following error to inform
 // you.
-if (Number(process.version.slice(1).split(".")[0]) < 12) throw new Error("Node 12.0.0 or higher is required. Update Node on your system.");
+if (Number(process.version.slice(1).split('.')[0]) < 12) throw new Error('Node 12.0.0 or higher is required. Update Node on your system.');
 
 // Load up the discord.js library
-const { Client, Collection } = require("discord.js");
+const { Client, Collection } = require('discord.js');
 // We also load the rest of the things we need in this file:
-const { promisify } = require("util");
-const readdir = promisify(require("fs").readdir);
-const Enmap = require("enmap");
-const klaw = require("klaw");
-const path = require("path");
+const { promisify } = require('util');
+const readdir = promisify(require('fs').readdir);
+const Enmap = require('enmap');
+const klaw = require('klaw');
+const path = require('path');
+const mongoose = require('mongoose');
 
 
 class GuideBot extends Client {
@@ -18,7 +19,7 @@ class GuideBot extends Client {
     super(options);
 
     // Here we load the config.js file that contains our token and our prefix values.
-    this.config = require("./config.js");
+    this.config = require('./config.js');
     // client.config.token contains the bot's token
     // client.config.prefix contains the message prefix
 
@@ -30,13 +31,16 @@ class GuideBot extends Client {
     // Now we integrate the use of Evie's awesome Enhanced Map module, which
     // essentially saves a collection to disk. This is great for per-server configs,
     // and makes things extremely easy for this purpose.
-    this.settings = new Enmap({ name: "settings", cloneLevel: "deep", fetchAll: false, autoFetch: true });
+    this.settings = new Enmap({ name: 'settings', cloneLevel: 'deep', fetchAll: false, autoFetch: true });
 
     //requiring the Logger class for easy console logging
-    this.logger = require("./modules/Logger");
+    this.logger = require('./modules/Logger');
 
     // Basically just an async shortcut to using a setTimeout. Nothing fancy!
-    this.wait = require("util").promisify(setTimeout);
+    this.wait = require('util').promisify(setTimeout);
+
+    // Connect to mongodb
+    this.db = mongoose.connection;
   }
 
   /*
@@ -75,7 +79,7 @@ class GuideBot extends Client {
   loadCommand (commandPath, commandName) {
     try {
       const props = new (require(`${commandPath}${path.sep}${commandName}`))(this);
-      this.logger.log(`Loading Command: ${props.help.name}. 👌`, "log");
+      this.logger.log(`Loading Command: ${props.help.name}. 👌`, 'log');
       props.conf.location = commandPath;
       if (props.init) {
         props.init(this);
@@ -114,15 +118,15 @@ class GuideBot extends Client {
   This is mostly only used by the Eval and Exec commands.
   */
   async clean (text) {
-    if (text && text.constructor.name == "Promise")
+    if (text && text.constructor.name == 'Promise')
       text = await text;
-    if (typeof text !== "string")
-      text = require("util").inspect(text, { depth: 1 });
+    if (typeof text !== 'string')
+      text = require('util').inspect(text, { depth: 1 });
 
     text = text
-      .replace(/`/g, "`" + String.fromCharCode(8203))
-      .replace(/@/g, "@" + String.fromCharCode(8203))
-      .replace(this.token, "mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0");
+      .replace(/`/g, '`' + String.fromCharCode(8203))
+      .replace(/@/g, '@' + String.fromCharCode(8203))
+      .replace(this.token, 'mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0');
 
     return text;
   }
@@ -136,7 +140,7 @@ class GuideBot extends Client {
   // getSettings merges the client defaults with the guild settings. guild settings in
   // enmap should only have *unique* overrides that are different from defaults.
   getSettings (guild) {
-    const defaults = this.settings.get("default") || {};
+    const defaults = this.settings.get('default') || {};
     const guildData = guild ? this.settings.get(guild.id) || {} : {};
     const returnObject = {};
     Object.keys(defaults).forEach((key) => {
@@ -148,9 +152,9 @@ class GuideBot extends Client {
   // writeSettings overrides, or adds, any configuration item that is different
   // than the defaults. This ensures less storage wasted and to detect overrides.
   writeSettings (id, newSettings) {
-    const defaults = this.settings.get("default");
+    const defaults = this.settings.get('default');
     let settings = this.settings.get(id);
-    if (typeof settings != "object") settings = {};
+    if (typeof settings != 'object') settings = {};
     for (const key in newSettings) {
       if (defaults[key] !== newSettings[key]) {
         settings[key] = newSettings[key];
@@ -173,7 +177,7 @@ class GuideBot extends Client {
     const filter = m => m.author.id === msg.author.id;
     await msg.channel.send(question);
     try {
-      const collected = await msg.channel.awaitMessages(filter, { max: 1, time: limit, errors: ["time"] });
+      const collected = await msg.channel.awaitMessages(filter, { max: 1, time: limit, errors: ['time'] });
       return collected.first().content;
     } catch (e) {
       return false;
@@ -191,20 +195,23 @@ const client = new GuideBot();
 
 const init = async () => {
 
+  await mongoose.connect(client.config.dbString, {useUnifiedTopology: true, useNewUrlParser: true});
+
   // Here we load **commands** into memory, as a collection, so they're accessible
   // here and everywhere else.
-  klaw("./commands").on("data", (item) => {
+  klaw('./commands').on('data', (item) => {
     const cmdFile = path.parse(item.path);
-    if (!cmdFile.ext || cmdFile.ext !== ".js") return;
+    if (!cmdFile.ext || cmdFile.ext !== '.js') return;
     const response = client.loadCommand(cmdFile.dir, `${cmdFile.name}${cmdFile.ext}`);
     if (response) client.logger.error(response);
   });
 
+
   // Then we load events, which will include our message and ready event.
-  const evtFiles = await readdir("./events/");
-  client.logger.log(`Loading a total of ${evtFiles.length} events.`, "log");
+  const evtFiles = await readdir('./events/');
+  client.logger.log(`Loading a total of ${evtFiles.length} events.`, 'log');
   evtFiles.forEach(file => {
-    const eventName = file.split(".")[0];
+    const eventName = file.split('.')[0];
     client.logger.log(`Loading Event: ${eventName}`);
     const event = new (require(`./events/${file}`))(client);
     // This line is awesome by the way. Just sayin'.
@@ -226,10 +233,13 @@ const init = async () => {
 
 init();
 
-client.on("disconnect", () => client.logger.warn("Bot is disconnecting..."))
-  .on("reconnecting", () => client.logger.log("Bot reconnecting...", "log"))
-  .on("error", e => client.logger.error(e))
-  .on("warn", info => client.logger.warn(info));
+client.on('disconnect', () => client.logger.warn('Bot is disconnecting...'))
+  .on('reconnecting', () => client.logger.log('Bot reconnecting...', 'log'))
+  .on('error', e => client.logger.error(e))
+  .on('warn', info => client.logger.warn(info));
+
+client.db.on('connected', () => client.logger.log('Database connection stabelished', 'ready'))
+  .on('error', (e) => client.logger.error(e));
 
 /* MISCELANEOUS NON-CRITICAL FUNCTIONS */
 
@@ -250,14 +260,16 @@ Array.prototype.random = function () {
 };
 
 // These 2 process methods will catch exceptions and give *more details* about the error and stack trace.
-process.on("uncaughtException", (err) => {
-  const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, "g"), "./");
-  console.error("Uncaught Exception: ", errorMsg);
+process.on('uncaughtException', (err) => {
+  const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, 'g'), './');
+  console.error('Uncaught Exception: ', errorMsg);
   // Always best practice to let the code crash on uncaught exceptions. 
   // Because you should be catching them anyway.
   process.exit(1);
 });
 
-process.on("unhandledRejection", err => {
-  console.error("Uncaught Promise Error: ", err);
+process.on('unhandledRejection', err => {
+  console.error('Uncaught Promise Error: ', err);
 });
+
+module.exports = GuideBot;

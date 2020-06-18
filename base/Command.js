@@ -6,7 +6,7 @@
 class Command {
   /**
    * Creates an instance of Command.
-   * @param {import("discord.js").Client} client The discord client
+   * @param {typeof import("../index")} client The discord client
    * @param {{name: string  | null, description: string, category: string, usage: string, enabled: boolean, guildOnly: boolean, aliases: Array<string>, permLevel: string}} {
    *     name = null,
    *     description = "No description provided.",

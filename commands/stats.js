@@ -1,5 +1,5 @@
 const Command = require('../base/Command.js');
-const { version } = require('discord.js');
+const { version } = require('discord.js-selfbot');
 const moment = require('moment');
 require('moment-duration-format');
 
