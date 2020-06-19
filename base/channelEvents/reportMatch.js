@@ -45,6 +45,10 @@ class ReportMatch extends ChannelEvent {
     let pos = 1;
     while (res = playerCivRegex.exec(content)) { //eslint-disable-line no-cond-assign
       let player = await Player.findOne({discordId: res[1]});
+
+      if (!res[2]) return await this.error(`Informe uma civilização para o jogador <@!${res[1]}>`);
+
+
       if (!player) {
         player = new Player();
         player.discordId = res[1];
