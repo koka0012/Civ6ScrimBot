@@ -30,10 +30,10 @@ class Conceder extends Command {
     • O primeiro lugar na posição de pontos não poderá iniciar a votação
     • A pessoa que iniciar a votação automaticamente terá o seu voto a favor do final da partida
     • Cada votação deverá obedecer ao intervalo de dez turnos uma da outra, em caso de outra votação ter falhado
-    • Caso dois jogadores decidam por empatar pela mesma posição no placar, os moverão pela mesma posição, ganhando poder de veto
+    • Caso dois jogadores decidam por empatar pela mesma posição no placar, os dois moverão para mesma posição, ganhando poder de veto
     • Um jogador que decida empatar com outro jogador em uma posição muito acima da sua apenas poderá fazê-lo se todos aqueles entre ambas as posições concordarem
-    • Empates pelo primeiro lugar não serão possíveis, a menos que haja aprovação de um administrador
-    • Se uma cidade foi capturada neste turno, até os 20 segundos mínimos de encerramento de turno, a votação de conceder deverá ocorrer no turno seguinte
+    • Empates pelo primeiro lugar não são possíveis, a menos que haja aprovação de um administrador
+    • Se uma cidade foi capturada o turno da votação, até os 20 segundos mínimos de encerramento do turno, a votação para conceder deverá ocorrer no turno seguinte
     • Para informações sobre as regras de veto, digite .veto`);
   }
 }
