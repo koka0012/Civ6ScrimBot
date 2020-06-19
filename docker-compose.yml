@@ -4,4 +4,4 @@ services:
     build: .
     restart: always
     volumes:
-      - ./data:data
+      - ./data:,/data
