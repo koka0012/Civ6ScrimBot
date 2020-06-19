@@ -12,6 +12,7 @@ const Enmap = require('enmap');
 const klaw = require('klaw');
 const path = require('path');
 const mongoose = require('mongoose');
+const glicko2 = require('glicko2');
 
 
 class GuideBot extends Client {
@@ -27,6 +28,7 @@ class GuideBot extends Client {
     // catalogued, listed, etc.
     this.commands = new Collection();
     this.aliases = new Collection();
+    this.channelEvents = new Collection();
 
     // Now we integrate the use of Evie's awesome Enhanced Map module, which
     // essentially saves a collection to disk. This is great for per-server configs,
@@ -41,6 +43,8 @@ class GuideBot extends Client {
 
     // Connect to mongodb
     this.db = mongoose.connection;
+
+    this.glicko = new glicko2.Glicko2({tau: 0.3, rating: 1000, rd: 200, vol: 0.06});
   }
 
   /*
@@ -108,6 +112,21 @@ class GuideBot extends Client {
     }
     delete require.cache[require.resolve(`${commandPath}${path.sep}${commandName}.js`)];
     return false;
+  }
+
+  async loadChannelEvent ( commandPath, eventName) {
+    try {
+      const props = new (require(`${commandPath}${path.sep}${eventName}`))(this);
+      this.logger.log(`Loading Channel Event: ${props.name}. 👌`, 'log');
+      props.location = commandPath;
+      if (props.init) {
+        props.init(this);
+      }
+      this.channelEvents.set(props.name, props);
+      return false;
+    } catch (e) {
+      return `Unable to load channel event ${eventName}: ${e}`;
+    }
   }
 
   /*
@@ -206,6 +225,13 @@ const init = async () => {
     if (response) client.logger.error(response);
   });
 
+  klaw('./base/channelEvents').on('data', async (item) => {
+    const channelEventFile = path.parse(item.path);
+    if (!channelEventFile.ext || channelEventFile.ext !== '.js') return;
+    const response = await client.loadChannelEvent(channelEventFile.dir, `${channelEventFile.name}${channelEventFile.ext}`);
+    if (response) client.logger.error(response);
+  });
+
 
   // Then we load events, which will include our message and ready event.
   const evtFiles = await readdir('./events/');
@@ -225,7 +251,7 @@ const init = async () => {
     client.levelCache[thisLevel.name] = thisLevel.level;
   }
 
-  // Here we login the client.
+  // Here we login the client
   client.login(client.config.token);
 
   // End top-level async/await function.

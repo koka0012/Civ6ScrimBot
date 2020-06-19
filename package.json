@@ -32,6 +32,7 @@
     "enmap": "^5.0.1",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
+    "glicko2": "^0.8.4",
     "klaw": "^2.1.1",
     "moment": "^2.22.2",
     "moment-duration-format": "^2.2.2",

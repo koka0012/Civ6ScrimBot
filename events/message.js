@@ -7,6 +7,12 @@ module.exports = class {
     this.client = client;
   }
 
+  /**
+   * Run class
+   *
+   * @param {import("discord.js").Message} message
+   * @returns
+   */
   async run (message) {
 
     // It's good practice to ignore other bots. This also makes your bot ignore itself
@@ -14,8 +20,8 @@ module.exports = class {
     if (message.author.bot) return;
 
     // Cancel any attempt to execute commands if the bot cannot respond to the user.
-    if (message.guild && !message.channel.permissionsFor(message.guild.me).missing("SEND_MESSAGES")) return;
-    
+    if (message.guild && !message.channel.permissionsFor(message.guild.me).missing('SEND_MESSAGES')) return;
+
     // Grab the settings for this server from the Enmap
     // If there is no guild, get default conf (DMs)
     const settings = this.client.getSettings(message.guild);
@@ -23,6 +29,14 @@ module.exports = class {
     // For ease of use in commands and functions, we'll attach the settings
     // to the message object, so `message.settings` is accessible.
     message.settings = settings;
+
+    // Report system
+    if (settings.channelEvents[message.channel.id]) {
+      const event = this.client.channelEvents.get(settings.channelEvents[message.channel.id]);
+      if (!event) return;
+      event.onMessage(message);
+      return;
+    }
 
     // Checks if the bot was mentioned, with no message after it, returns the prefix.
     const prefixMention = new RegExp(`^<@!?${this.client.user.id}> ?$`);
@@ -57,10 +71,10 @@ module.exports = class {
     // Some commands may not be useable in DMs. This check prevents those commands from running
     // and return a friendly error message.
     if (cmd && !message.guild && cmd.conf.guildOnly)
-      return message.channel.send("This command is unavailable via private message. Please run this command in a guild.");
+      return message.channel.send('This command is unavailable via private message. Please run this command in a guild.');
 
     if (level < this.client.levelCache[cmd.conf.permLevel]) {
-      if (settings.systemNotice === "true") {
+      if (settings.systemNotice === 'true') {
         return message.channel.send(`You do not have permission to use this command.
 Your permission level is ${level} (${this.client.config.permLevels.find(l => l.level === level).name})
 This command requires level ${this.client.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`);
@@ -74,12 +88,12 @@ This command requires level ${this.client.levelCache[cmd.conf.permLevel]} (${cmd
     message.author.permLevel = level;
 
     message.flags = [];
-    while (args[0] &&args[0][0] === "-") {
+    while (args[0] &&args[0][0] === '-') {
       message.flags.push(args.shift().slice(1));
     }
     
     // If the command exists, **AND** the user has permission, run it.
-    this.client.logger.log(`${this.client.config.permLevels.find(l => l.level === level).name} ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`, "cmd");
+    this.client.logger.log(`${this.client.config.permLevels.find(l => l.level === level).name} ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`, 'cmd');
     cmd.run(message, args, level);
   }
 };

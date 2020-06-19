@@ -918,6 +918,11 @@ get-stream@^5.1.0:
   dependencies:
     pump "^3.0.0"
 
+glicko2@^0.8.4:
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/glicko2/-/glicko2-0.8.4.tgz#cc126e4ebcd577e2a8ff1d6d819f5d08ee985aaf"
+  integrity sha1-zBJuTrzVd+Ko/x1tgZ9dCO6YWq8=
+
 glob-parent@^5.0.0, glob-parent@~5.1.0:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.1.tgz#b6c1ef417c4e5663ea498f1c45afac6916bbc229"

@@ -2,7 +2,10 @@ const mongoose = require('mongoose');
 
 const PlayerSchema = mongoose.Schema({
   discordId: String,
-  plataform: String
+  plataform: String,
+  rating: Number,
+  rd: Number,
+  vol: Number
 });
 
 const Player = mongoose.model('Player', PlayerSchema);

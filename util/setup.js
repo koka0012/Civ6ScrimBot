@@ -1,42 +1,47 @@
-const input = require("readline-sync");
-const Enmap = require("enmap");
-const fs = require("fs");
+const input = require('readline-sync');
+const Enmap = require('enmap');
+const fs = require('fs');
 
-let baseConfig = fs.readFileSync("./util/setup_base.txt", "utf8");
+let baseConfig = fs.readFileSync('./util/setup_base.txt', 'utf8');
 
 const defaultSettings = {
-  "prefix": "-",
-  "modLogChannel": "mod-log",
-  "modRole": "Moderator",
-  "adminRole": "Administrator",
-  "systemNotice": "true",
-  "welcomeChannel": "welcome",
-  "welcomeMessage": "Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D",
-  "welcomeEnabled": "false"
+  'prefix': '-',
+  'modLogChannel': 'mod-log',
+  'modRole': 'Moderator',
+  'adminRole': 'Administrator',
+  'aprovadorRole': 'Aprovador',
+  'systemNotice': 'true',
+  'welcomeChannel': 'welcome',
+  'welcomeMessage': 'Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D',
+  'welcomeEnabled': 'false',
+  'channelEvents': {},
+  'defaultRating': 1000,
+  'defaultRd': 200,
+  'vol': 0.06
 };
 
-const settings = new Enmap({ name: "settings", cloneLevel: "deep" });
+const settings = new Enmap({ name: 'settings', cloneLevel: 'deep' });
 
 (async function () {
-  console.log("Setting Up GuideBot Configuration... CTRL+C if you want to manually edit config.js.example into config.js!");
+  console.log('Setting Up GuideBot Configuration... CTRL+C if you want to manually edit config.js.example into config.js!');
   await settings.defer;
-  if (settings.has("default")) {
-    if (input.keyInYN("Default settings already present. Reset to default? ")) {
-      settings.set("default", defaultSettings);
+  if (settings.has('default')) {
+    if (input.keyInYN('Default settings already present. Reset to default? ')) {
+      settings.set('default', defaultSettings);
     }
   } else {
-    console.log("First Start! Inserting default guild settings in the database...");
-    settings.set("default", defaultSettings);
+    console.log('First Start! Inserting default guild settings in the database...');
+    settings.set('default', defaultSettings);
   }
 
-  const token = input.question("Enter the bot token from the application page: ");
+  const token = input.question('Enter the bot token from the application page: ');
 
   baseConfig = baseConfig
-    .replace("{{defaultSettings}}", JSON.stringify(defaultSettings, null, 2))
-    .replace("{{token}}", `"${token}"`);
+    .replace('{{defaultSettings}}', JSON.stringify(defaultSettings, null, 2))
+    .replace('{{token}}', `"${token}"`);
   
-  fs.writeFileSync("./config.js", baseConfig);
-  console.log("REMEMBER TO NEVER SHARE YOUR TOKEN WITH ANYONE!");
-  console.log("Configuration has been written, enjoy!");
+  fs.writeFileSync('./config.js', baseConfig);
+  console.log('REMEMBER TO NEVER SHARE YOUR TOKEN WITH ANYONE!');
+  console.log('Configuration has been written, enjoy!');
   await settings.close();
 }());

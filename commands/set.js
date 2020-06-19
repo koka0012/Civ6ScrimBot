@@ -39,6 +39,8 @@ class SetCMD extends Command {
       if (!key) return message.reply('Por favor, específique uma chave para editar.');
       // User must specify a key that actually exists!
       if (!settings[key]) return message.reply('Essa chave não existe nas configurações.');
+      // Cannot edit objects direclty
+      if (typeof settings[key] === 'object') return message.reply('Essa chave não pode ser editada diretamente.');
       // User must specify a value to change.
       const joinedValue = value.join(' ');
       if (joinedValue.length < 1) return message.reply('Por favor específique um valor.');
@@ -80,11 +82,30 @@ class SetCMD extends Command {
     if (action === 'get') {
       if (!key) return message.reply('Por favor, específique o valor para vizualizar.');
       if (!settings[key]) return message.reply('Essa chave não existe.');
-      message.reply(`O valor da chave ${key} atualmente é ${settings[key]}`);
+
+      let value = settings[key];
+      if (typeof value === 'object') {
+        value = JSON.stringify(value, '', 2);
+      }
+
+      message.reply(`O valor da chave ${key} atualmente é ${value}`);
       
+    } else if (action === 'add') {
+      if (!key) return message.reply('Por favor, específique o valor para modificar.');
+      if (!settings[key]) return message.reply('Essa chave não existe.');
+      if (typeof settings[key] !== 'object') return message.reply('Essa chave não pode ser editada por este comando.');
+
+      if (!this.client.settings.has(message.guild.id)) this.client.settings.set(message.guild.id, {});
+
+      const index = value.shift();
+
+      // Modify the guild overrides directly.
+      this.client.settings.set(message.guild.id, {...settings[key], [index]: value.join(' ') }, key);
+      message.reply(`Chave ${key} alterada com sucesso, adicionado a index ${index} com o valor ${value.join(' ')}`);
+
     } else {
       // Otherwise, the default action is to return the whole configuration;
-      const array = Object.entries(settings).map(([key, value]) => `${key}${' '.repeat(20 - key.length)}::  ${value}`);
+      const array = Object.entries(settings).map(([key, value]) =>`${key}${' '.repeat(20 - key.length)}::  ${ typeof value !== 'object' ? value : 'Use get para ver esse valor.'}`);
       await message.channel.send(`= Configuração Atuais da Guild =\n${array.join('\n')}`, {code: 'asciidoc'});
     }
   }
