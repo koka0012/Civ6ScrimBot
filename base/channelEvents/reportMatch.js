@@ -50,8 +50,12 @@ class ReportMatch extends ChannelEvent {
 
 
       if (!player) {
+        const settings = this.client.getSettings(message.guild);
         player = new Player();
         player.discordId = res[1];
+        player.rating = settings.defaultRating;
+        player.rd = settings.defaultRd;
+        player.vol = settings.defaultVol;
         player.save();
       }
 
@@ -63,6 +67,8 @@ class ReportMatch extends ChannelEvent {
 
       pos++;
     };
+
+    Player.upda;
 
     let leaderboardText = '';
     match.leaderboard.forEach(l => {
