@@ -22,7 +22,7 @@ class Conceder extends Command {
    */
   async run (message) {
     await message.channel.send(`\`Turno 0-80  -   Votação Unânime\`
- \`Turno 81-100  -  Todos menos 1\`
+\`Turno 81-100  -  Todos menos 1\`
 \`Turno 101+      -  Todos menos 2\`
     
 Regras Básicas para Conceder:
