@@ -5,7 +5,7 @@ const moment = require('moment');
 const Match = require('../../base/Schemas/Match.js');
 const player = require('../../base/Schemas/Player.js');
 
-class Register extends Command {
+class Confirm extends Command {
   constructor (client) {
     super(client, {
       name: 'confirmar',
@@ -70,4 +70,4 @@ class Register extends Command {
   }
 }
 
-module.exports = Register;
+module.exports = Confirm;
