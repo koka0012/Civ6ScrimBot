@@ -18,9 +18,10 @@ class ReportMatch extends ChannelEvent {
   async onMessage (message) {
     const gameTypeRegex = /TIPO DE JOGO:\s*(FFA|TIME)/g;
     const hostRegex = /HOST: <@!([0-9]*)*?>/g;
-    const playerCivRegex = /.*<@!([0-9]*)*?>\s*([A-Z]+)/g;
+    const playerCivRegex = /<@!([0-9]*)*?>\s*([A-Z]+)/g;
 
-    const content = message.content.toUpperCase();
+    const lines = message.content.split('\n').filter(_ => _ != '');
+    const content = lines.join('\n').toUpperCase();
 
     // GAME TYPE
     const gameTypeMatch = gameTypeRegex.exec(content);
@@ -42,12 +43,12 @@ class ReportMatch extends ChannelEvent {
     match.leaderboard = [];
 
     let res;
-    let pos = 1;
     while (res = playerCivRegex.exec(content)) { //eslint-disable-line no-cond-assign
       let player = await Player.findOne({discordId: res[1]});
 
       if (!res[2]) return await this.error(`Informe uma civilização para o jogador <@!${res[1]}>`);
 
+      const pos = this.lineNumberByIndex(res.index, content) - 2;
 
       if (!player) {
         const settings = this.client.getSettings(message.guild);
@@ -64,15 +65,11 @@ class ReportMatch extends ChannelEvent {
         civ: res[2],
         player
       });
-
-      pos++;
     };
-
-    Player.upda;
 
     let leaderboardText = '';
     match.leaderboard.forEach(l => {
-      leaderboardText += `<@!${l.player.discordId}> | ${l.civ}\n`;
+      leaderboardText += `${l.position}. <@!${l.player.discordId}> | ${l.civ}\n`;
     });
 
     const reply = {
@@ -113,6 +110,19 @@ class ReportMatch extends ChannelEvent {
     const res = await msg.reply(text);
     await msg.delete({timeout: 10000});
     res.delete({timeout: 10000});
+  }
+
+  lineNumberByIndex (index,string) {
+    // RegExp
+    var line = 0,
+      match,
+      re = /(^)[\S\s]/gm;
+    while (match = re.exec(string)) {
+      if (match.index > index)
+        break;
+      line++;
+    }
+    return line;
   }
 }
 

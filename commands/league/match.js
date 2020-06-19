@@ -49,7 +49,12 @@ class Confirm extends Command {
       const player = this.client.glicko.makePlayer(m.player.rating, m.player.rd, m.player.vol);
       player.playerDb = m.player;
       rankingPlayers.push(player);
-      matchGlickoPositions.push([player]);
+
+      if (matchGlickoPositions[m.position -1]) {
+        matchGlickoPositions[m.position -1] = [...matchGlickoPositions[m.position -1], player];
+      } else {
+        matchGlickoPositions.push([player]);
+      }
     });
 
     const race = this.client.glicko.makeRace(matchGlickoPositions);
