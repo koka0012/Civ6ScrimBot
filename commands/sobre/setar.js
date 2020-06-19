@@ -8,6 +8,7 @@ class Setar extends Command {
       description: 'Setar o texto de um comando',
       usage: 'setar <key> <text>',
       category: 'Sistema',
+      permLevel: 'Administrator'
     });
   }
 
