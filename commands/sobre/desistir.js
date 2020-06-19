@@ -1,4 +1,5 @@
 const Command = require('../../base/Command.js');
+const Info = require('../../base/Schemas/Info.js');
 
 class Desistir extends Command {
   constructor (client) {
@@ -21,7 +22,10 @@ class Desistir extends Command {
    * @memberof Command
    */
   async run (message) {
-    await message.channel.send('Você poderá desistir do jogo a qualquer momento, podendo sair da partida sem penalidades conquanto tenha perdido 2/3 de suas cidades. Do contrário, poderá pedir por uma votação a partir do turno 50, devendo obter uma quantidade de votos igual a 2/3 da quantidade total de participantes. Contudo, para essa votação, os três primeiros jogadores no placar de pontuação poderão vetá-la, fazendo-a falhar automaticamente.');
+    const msg = await Info.findOne({key: 'desistir'});
+    if (!msg) return;
+
+    await message.channel.send(msg.value.trim());
   }
 }
 

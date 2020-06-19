@@ -43,6 +43,7 @@ class GuideBot extends Client {
 
     // Connect to mongodb
     this.db = mongoose.connection;
+    mongoose.set('useFindAndModify', false);
 
     this.glicko = new glicko2.Glicko2({tau: 0.3, rating: 1000, rd: 200, vol: 0.06});
   }

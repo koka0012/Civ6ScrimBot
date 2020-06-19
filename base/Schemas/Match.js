@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 const MatchSchema = mongoose.Schema({
   type: String,
   host: String,
+  verified: Boolean,
+  messageId: String,
+  messageChannelId: String,
   leaderboard: [{
     position: Number,
     civ: String,
