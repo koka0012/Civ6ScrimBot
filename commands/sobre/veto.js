@@ -1,11 +1,11 @@
 const Command = require('../../base/Command.js');
 
-class Conceder extends Command {
+class Veto extends Command {
   constructor (client) {
     super(client, {
-      name: 'desistir',
-      description: 'Desistir da partida',
-      usage: 'desistir',
+      name: 'veto',
+      description: 'Veto da partida',
+      usage: 'veto',
       category: 'Liga',
     });
   }
@@ -21,21 +21,22 @@ class Conceder extends Command {
    * @memberof Command
    */
   async run (message) {
-    await message.channel.send(`Turno 0-80  -   Votação Unânime
-    Turno 81-100  -  Todos menos 1
-    Turno 101+      -  Todos menos 2
-    
-    Regras Básicas para Conceder:
-    • O jogo deverá ser pausado até o 20 segundo antes do turno terminar
-    • O primeiro lugar na posição de pontos não poderá iniciar a votação
-    • A pessoa que iniciar a votação automaticamente terá o seu voto a favor do final da partida
-    • Cada votação deverá obedecer ao intervalo de dez turnos uma da outra, em caso de outra votação ter falhado
-    • Caso dois jogadores decidam por empatar pela mesma posição no placar, os moverão pela mesma posição, ganhando poder de veto
-    • Um jogador que decida empatar com outro jogador em uma posição muito acima da sua apenas poderá fazê-lo se todos aqueles entre ambas as posições concordarem
-    • Empates pelo primeiro lugar não serão possíveis, a menos que haja aprovação de um administrador
-    • Se uma cidade foi capturada neste turno, até os 20 segundos mínimos de encerramento de turno, a votação de conceder deverá ocorrer no turno seguinte
-    • Para informações sobre as regras de veto, digite .veto`);
+    await message.channel.send(`**PLACAR:**
+    • Os jogadores em 2° e 3° lugar no placar têm poder de veto
+    **CIÊNCIA:**
+    • O jogador com a maior quantidade de ciência por turno tem poder e veto
+    • O jogador com a maior quantidade de tecnologias pesquisadas tem poder de veto
+    • Qualquer jogador que tenha lançado o satélite tem poder de veto
+    **CULTURA:**
+    • O jogador com a maior quantidade de turistas estrangeiros (no painel de vitória cultural) tem poder de veto
+    • Qualquer jogador com pelo menos 500 de turismo por turno tem poder veto
+    **MILITAR:**
+    • O jogador com maior poder militar (número ao lado da espada) tem poder de veto
+    **RELIGIÃO:**
+    • Qualquer jogador que tiver convertido pelo menos 30% das civilizações tem poder de veto
+    DIPLOMACIA:
+    • Qualquer jogador que tiver mais de 10 pontos diplomáticos tem poder de veto`);
   }
 }
 
-module.exports = Conceder;
+module.exports = Veto;
