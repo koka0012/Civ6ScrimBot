@@ -1,9 +1,5 @@
 const Command = require('../../base/Command.js');
-const Player = require('../../base/Schemas/Player.js');
-const { MessageEmbed } = require('discord.js');
-const moment = require('moment');
 const Match = require('../../base/Schemas/Match.js');
-const player = require('../../base/Schemas/Player.js');
 
 class Confirm extends Command {
   constructor (client) {

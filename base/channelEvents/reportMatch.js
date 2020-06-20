@@ -53,7 +53,7 @@ class ReportMatch extends ChannelEvent {
       if (!player) {
         const settings = this.client.getSettings(message.guild);
         player = new Player();
-        player.discordId = res[1];
+        player.discordId = res[1].replace('!', '').replace('<', '').replace('>', '').replace('@', '');
         player.rating = settings.defaultRating;
         player.rd = settings.defaultRd;
         player.vol = settings.defaultVol;
