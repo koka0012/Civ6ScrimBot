@@ -4,4 +4,7 @@ services:
     build: .
     restart: always
     volumes:
-      - ./data:/data
+      - data:/usr/src/bot/data
+volumes:
+  data:
+    driver: local
