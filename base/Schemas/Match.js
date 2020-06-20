@@ -9,6 +9,11 @@ const MatchSchema = mongoose.Schema({
   leaderboard: [{
     position: Number,
     civ: String,
+    backup: {
+      rating: Number,
+      vol: Number,
+      rd: Number
+    },
     player: {type: mongoose.Schema.Types.ObjectId, ref: 'Player'}
   }]
 });

@@ -1,6 +1,6 @@
 import { Document, Model } from 'mongoose';
 
-interface Player extends Document {
+export interface PlayerModel extends Document {
   discordId: string;
   plataform: string;
   rating: number;
@@ -8,6 +8,6 @@ interface Player extends Document {
   vol: number;
 }
 
-let player: Model<Player>;
+let player: Model<PlayerModel>;
 
 export = player;

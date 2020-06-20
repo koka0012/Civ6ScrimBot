@@ -1,5 +1,7 @@
 const Command = require('../../base/Command.js');
 const Match = require('../../base/Schemas/Match.js');
+const { Message } = require('discord.js');
+const moment = require('moment');
 
 class Confirm extends Command {
   constructor (client) {
@@ -41,9 +43,10 @@ class Confirm extends Command {
         m.player.rd = settings.defaultRd;
         m.player.vol = settings.defaultVol;
       };
-
+      
       const player = this.client.glicko.makePlayer(m.player.rating, m.player.rd, m.player.vol);
       player.playerDb = m.player;
+
       rankingPlayers.push(player);
 
       if (matchGlickoPositions[m.position -1]) {
@@ -62,12 +65,117 @@ class Confirm extends Command {
       player.rd = p.getRd();
       player.vol = p.getVol();
 
+      this.updateRank(player, message);
+
       await player.save();
     }
 
     match.verified = true;
     await match.save();
     await message.reply(`Partida \`${match.id}\` foi validada. Pontos de liga já foram atualizados.`);
+  }
+
+  /**
+   * @param {import("../../base/Schemas/Player").PlayerModel} player
+   * @param {Message} message
+   * @memberof Confirm
+   */
+  async updateRank (player, message) {
+    if (!message) return;
+    const roles = ['Colono', 'Chefe', 'Senhor da Guerra', 'Príncipe', 'Rei', 'Imperador', 'Imortal', 'Divindade'];
+
+    const guild = message.guild;
+
+    const member = guild.member(player.discordId);
+    if (!member) return;
+
+    const targetRank = Math.floor(Math.max(0, player.rating - 1000) / 200);
+    const roleRank = member.roles.cache.find(r => roles.includes(r.name));
+    const targetRole = guild.roles.cache.find(r => r.name === roles[targetRank]);
+
+    if (roleRank && roles[targetRank] && roleRank.name != roles[targetRank]) {
+      await member.roles.remove(roleRank);
+      await member.roles.add(targetRole);
+
+      const embed = {
+        'embed':
+          {
+            'title': 'Promoção na liga!',
+            'color': 2470302,
+            'fields': [
+              {
+                'name': 'Jogador',
+                'value': `<@!${member.id}>` 
+              },
+              {
+                'name': 'Novo Rank',
+                'value': roles[targetRank]
+              },
+              {
+                'name': 'Pontos atuais',
+                'value': player.rating
+              }
+            ],
+            'thumbnail': {
+              'url': member.user.avatarURL()
+            },
+            'timestamp': moment().format()
+          }
+      };
+  
+
+      guild.channels.cache.find(c => c.name == 'informações').send(embed);
+    } else if (!roleRank) {
+      await member.roles.add(targetRole);
+      const embed = {
+        'embed':
+          {
+            'title': 'Atualiazação de pontos',
+            'color': 2470302,
+            'fields': [
+              {
+                'name': 'Jogador',
+                'value': `<@!${member.id}>` 
+              },
+              {
+                'name': 'Pontos atuais',
+                'value': player.rating
+              }
+            ],
+            'thumbnail': {
+              'url': member.user.avatarURL()
+            },
+            'timestamp': moment().format()
+          }
+      };
+  
+
+      guild.channels.cache.find(c => c.name == 'informações').send(embed);
+    } else {
+      const embed = {
+        'embed':
+          {
+            'title': 'Atualiazação de pontos',
+            'color': 2470302,
+            'fields': [
+              {
+                'name': 'Jogador',
+                'value': `<@!${member.id}>` 
+              },
+              {
+                'name': 'Pontos atuais',
+                'value': player.rating
+              }
+            ],
+            'thumbnail': {
+              'url': member.user.avatarURL()
+            },
+            'timestamp': moment().format()
+          }
+      };
+  
+      guild.channels.cache.find(c => c.name == 'informações').send(embed);
+    };
   }
 }
 
