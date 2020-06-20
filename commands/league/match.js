@@ -124,7 +124,7 @@ class Confirm extends Command {
       };
   
 
-      guild.channels.cache.find(c => c.name == 'informações').send(embed);
+      guild.channels.cache.find(c => c.name == 'promoções').send(embed);
     } else if (!roleRank) {
       await member.roles.add(targetRole);
       const embed = {
