@@ -117,7 +117,7 @@ class Confirm extends Command {
               }
             ],
             'thumbnail': {
-              'url': member.user.avatarURL() | ''
+              'url': member.user.avatarURL() || ''
             },
             'timestamp': moment().format()
           }
@@ -143,7 +143,7 @@ class Confirm extends Command {
               }
             ],
             'thumbnail': {
-              'url': member.user.avatarURL() | ''
+              'url': member.user.avatarURL() || ''
             },
             'timestamp': moment().format()
           }
@@ -168,7 +168,7 @@ class Confirm extends Command {
             }
           ],
           'thumbnail': {
-            'url': member.user.avatarURL() | ''
+            'url': member.user.avatarURL() || ''
           },
           'timestamp': moment().format()
         }
