@@ -1,6 +1,5 @@
 const Command = require('../../base/Command.js');
 const Match = require('../../base/Schemas/Match.js');
-const { Message } = require('discord.js');
 const moment = require('moment');
 
 class Confirm extends Command {
@@ -61,11 +60,13 @@ class Confirm extends Command {
 
     for (const p of rankingPlayers) {
       const {playerDb: player} = p;
+      const oldRating = player.rating;
+
       player.rating = p.getRating();
       player.rd = p.getRd();
       player.vol = p.getVol();
 
-      this.updateRank(player, message);
+      this.updateRank(player, message, oldRating);
 
       await player.save();
     }
@@ -77,10 +78,10 @@ class Confirm extends Command {
 
   /**
    * @param {import("../../base/Schemas/Player").PlayerModel} player
-   * @param {Message} message
+   * @param {import("discord.js").Message} message
    * @memberof Confirm
    */
-  async updateRank (player, message) {
+  async updateRank (player, message, oldRating) {
     if (!message) return;
     const roles = ['Colono', 'Chefe', 'Senhor da Guerra', 'Príncipe', 'Rei', 'Imperador', 'Imortal', 'Divindade'];
 
@@ -111,10 +112,12 @@ class Confirm extends Command {
                 'name': 'Novo Rank',
                 'value': roles[targetRank]
               },
+              {'name': 'Pontos anteriores', value: oldRating},
               {
                 'name': 'Pontos atuais',
                 'value': player.rating
-              }
+              },
+              {'name': 'Variação', value: player.rating - oldRating},
             ],
             'thumbnail': {
               'url': member.user.avatarURL() || ''
@@ -136,11 +139,12 @@ class Confirm extends Command {
               {
                 'name': 'Jogador',
                 'value': `<@!${member.id}>` 
-              },
+              },{'name': 'Pontos anteriores', value: oldRating},
               {
                 'name': 'Pontos atuais',
-                'value': player.rating | 0
-              }
+                'value': player.rating
+              },
+              {'name': 'Variação', value: player.rating - oldRating},
             ],
             'thumbnail': {
               'url': member.user.avatarURL() || ''
