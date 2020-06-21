@@ -117,14 +117,14 @@ class Confirm extends Command {
               }
             ],
             'thumbnail': {
-              'url': member.user.avatarURL()
+              'url': member.user.avatarURL() | ''
             },
             'timestamp': moment().format()
           }
       };
   
 
-      guild.channels.get('724042017675673600').send(embed);
+      guild.channels.cache.get('724042017675673600').send(embed);
     } else if (!roleRank) {
       await member.roles.add(targetRole);
       const embed = {
@@ -139,42 +139,42 @@ class Confirm extends Command {
               },
               {
                 'name': 'Pontos atuais',
-                'value': player.rating
+                'value': player.rating | 0
               }
             ],
             'thumbnail': {
-              'url': member.user.avatarURL()
+              'url': member.user.avatarURL() | ''
             },
             'timestamp': moment().format()
           }
       };
   
 
-      guild.channels.get('724042017675673600').send(embed);
+      guild.channels.cache.get('724042017675673600').send(embed);
     } else {
       const embed = {
         'embed':
-          {
-            'title': 'Atualiazação de pontos',
-            'color': 2470302,
-            'fields': [
-              {
-                'name': 'Jogador',
-                'value': `<@!${member.id}>` 
-              },
-              {
-                'name': 'Pontos atuais',
-                'value': player.rating
-              }
-            ],
-            'thumbnail': {
-              'url': member.user.avatarURL()
+        {
+          'title': 'Atualiazação de pontos',
+          'color': 2470302,
+          'fields': [
+            {
+              'name': 'Jogador',
+              'value': `<@!${member.id}>` 
             },
-            'timestamp': moment().format()
-          }
+            {
+              'name': 'Pontos atuais',
+              'value': player.rating | 0
+            }
+          ],
+          'thumbnail': {
+            'url': member.user.avatarURL() | ''
+          },
+          'timestamp': moment().format()
+        }
       };
   
-      guild.channels.get('724042017675673600').send(embed);
+      guild.channels.cache.get('724042017675673600').send(embed);
     };
   }
 }
