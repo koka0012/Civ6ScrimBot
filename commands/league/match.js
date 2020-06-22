@@ -167,9 +167,14 @@ class Confirm extends Command {
               'value': `<@!${member.id}>` 
             },
             {
+              'name': 'Jogador',
+              'value': `<@!${member.id}>` 
+            },{'name': 'Pontos anteriores', value: oldRating},
+            {
               'name': 'Pontos atuais',
-              'value': player.rating | 0
-            }
+              'value': player.rating
+            },
+            {'name': 'Variação', value: player.rating - oldRating},
           ],
           'thumbnail': {
             'url': member.user.avatarURL() || ''
