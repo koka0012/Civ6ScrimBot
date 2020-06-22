@@ -40,21 +40,21 @@ class Reset extends Command {
       const msg = await message.reply({
         'embed': {
           'title': 'Resetar Rank',
-          'description': `<@!${message.author.id}> deseja realmente resetar sua pontuação? Reaja a esta mensagem com ✔ para confirmar ou com ❌ para recusar.\nEssa ação é **irreversível**`,
+          'description': `<@!${message.author.id}> deseja realmente resetar sua pontuação? Reaja a esta mensagem com ✅ para confirmar ou com ❌ para recusar.\nEssa ação é **irreversível**`,
           'color': 15468812,
           'timestamp': moment().format()
         }
       });
 
-      await msg.react('✔');
-      await msg.react('724755234387394672');
+      await msg.react('✅');
+      await msg.react('❌');
       try {
         const reactions = await msg.awaitReactions((reaction, user) => {
-          return (reaction.name == '✔' || reaction.id == '❌') && user.id ==message.author.id;
+          return (reaction.name == '✅' || reaction.name == '❌') && user.id ==message.author.id;
         }, {max: 1, time: 60000, errors: ['time']});
 
-        switch (reactions.first().emoji.id) {
-          case '✔':
+        switch (reactions.first().emoji.name) {
+          case '✅':
             player.rating = settings.defaultRating;
             player.rd = settings.defaultRd;
             player.vol = settings.defaultVol;
