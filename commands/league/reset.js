@@ -50,7 +50,7 @@ class Reset extends Command {
       await msg.react('❌');
       try {
         const reactions = await msg.awaitReactions((reaction, user) => {
-          console.log(reaction);
+          console.log(reaction.emoji.name);
           return (reaction.emoji.name == ':white_check_mark:' || reaction.emoji.name == ':x:') && user.id == message.author.id;
         }, {max: 1, time: 60000, errors: ['time']});
 
