@@ -114,7 +114,7 @@ class Confirm extends Command {
               },{'name': 'Pontos anteriores', value: oldRating.toFixed(0)},
               {
                 'name': 'Pontos atuais',
-                'value': player.rating
+                'value': player.rating.toFixed(0)
               },
               {'name': 'Variação', value: (player.rating - oldRating).toFixed(0)},
             ],
@@ -141,7 +141,7 @@ class Confirm extends Command {
               },{'name': 'Pontos anteriores', value: oldRating.toFixed(0)},
               {
                 'name': 'Pontos atuais',
-                'value': player.rating
+                'value': player.rating.toFixed(0)
               },
               {'name': 'Variação', value: (player.rating - oldRating).toFixed(0)},
             ],
@@ -167,7 +167,7 @@ class Confirm extends Command {
             },{'name': 'Pontos anteriores', value: oldRating.toFixed(0)},
             {
               'name': 'Pontos atuais',
-              'value': player.rating
+              'value': player.rating.toFixed(0)
             },
             {'name': 'Variação', value: (player.rating - oldRating).toFixed(0)},
           ],
