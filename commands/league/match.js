@@ -111,13 +111,12 @@ class Confirm extends Command {
               {
                 'name': 'Novo Rank',
                 'value': roles[targetRank]
-              },
-              {'name': 'Pontos anteriores', value: oldRating},
+              },{'name': 'Pontos anteriores', value: oldRating.toFixed(0)},
               {
                 'name': 'Pontos atuais',
                 'value': player.rating
               },
-              {'name': 'Variação', value: player.rating - oldRating},
+              {'name': 'Variação', value: (player.rating - oldRating).toFixed(0)},
             ],
             'thumbnail': {
               'url': member.user.avatarURL() || ''
@@ -139,12 +138,12 @@ class Confirm extends Command {
               {
                 'name': 'Jogador',
                 'value': `<@!${member.id}>` 
-              },{'name': 'Pontos anteriores', value: oldRating},
+              },{'name': 'Pontos anteriores', value: oldRating.toFixed(0)},
               {
                 'name': 'Pontos atuais',
                 'value': player.rating
               },
-              {'name': 'Variação', value: player.rating - oldRating},
+              {'name': 'Variação', value: (player.rating - oldRating).toFixed(0)},
             ],
             'thumbnail': {
               'url': member.user.avatarURL() || ''
@@ -165,16 +164,12 @@ class Confirm extends Command {
             {
               'name': 'Jogador',
               'value': `<@!${member.id}>` 
-            },
-            {
-              'name': 'Jogador',
-              'value': `<@!${member.id}>` 
-            },{'name': 'Pontos anteriores', value: oldRating},
+            },{'name': 'Pontos anteriores', value: oldRating.toFixed(0)},
             {
               'name': 'Pontos atuais',
               'value': player.rating
             },
-            {'name': 'Variação', value: player.rating - oldRating},
+            {'name': 'Variação', value: (player.rating - oldRating).toFixed(0)},
           ],
           'thumbnail': {
             'url': member.user.avatarURL() || ''
