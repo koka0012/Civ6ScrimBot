@@ -5,7 +5,8 @@ const PlayerSchema = mongoose.Schema({
   plataform: String,
   rating: Number,
   rd: Number,
-  vol: Number
+  vol: Number,
+  resetCount: Number,
 });
 
 const Player = mongoose.model('Player', PlayerSchema);
