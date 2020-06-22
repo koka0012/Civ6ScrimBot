@@ -133,7 +133,7 @@ class Confirm extends Command {
       const embed = {
         'embed':
           {
-            'title': 'Atualiazação de pontos',
+            'title': 'Atualização de pontos',
             'color': 2470302,
             'fields': [
               {
@@ -159,7 +159,7 @@ class Confirm extends Command {
       const embed = {
         'embed':
         {
-          'title': 'Atualiazação de pontos',
+          'title': 'Atualização de pontos',
           'color': 2470302,
           'fields': [
             {
