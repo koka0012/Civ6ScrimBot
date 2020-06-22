@@ -50,18 +50,18 @@ class Reset extends Command {
       await msg.react('❌');
       try {
         const reactions = await msg.awaitReactions((reaction, user) => {
-          return (reaction.name == '✅' || reaction.name == '❌') && user.id ==message.author.id;
+          return (reaction.name == ':white_check_mark:' || reaction.name == ':x:') && user.id == message.author.id;
         }, {max: 1, time: 60000, errors: ['time']});
 
         switch (reactions.first().emoji.name) {
-          case '✅':
+          case ':white_check_mark:':
             player.rating = settings.defaultRating;
             player.rd = settings.defaultRd;
             player.vol = settings.defaultVol;
             player.resetCount++;
             await player.save();
             return await message.reply('Rank resetado com sucesso.');
-          case '❌':
+          case ':x:':
             return await msg.delete();
         }
       } catch (e) {
