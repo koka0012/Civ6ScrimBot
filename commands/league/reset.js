@@ -31,6 +31,10 @@ class Reset extends Command {
       return message.reply('Desculpe, você ainda não está cadastrado no sistema de rank. Utilize `.status` para se cadastrar ou jogue um jogo');
     }
 
+    if (player.resetCount === undefined || player.resetCount === null) {
+      player.resetCount = 0;
+    }
+
     if (player.resetCount < 1) {
       await message.delete();
       const msg = await message.reply({
@@ -64,6 +68,8 @@ class Reset extends Command {
         await msg.delete();
       }
       
+    } else {
+      message.reply('Você atingiu o numero máximo de resets nessa season.');
     }
   }
 }
