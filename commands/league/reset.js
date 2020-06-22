@@ -40,28 +40,28 @@ class Reset extends Command {
       const msg = await message.reply({
         'embed': {
           'title': 'Resetar Rank',
-          'description': `<@!${message.author.id}> deseja realmente resetar sua pontuação? Reaja a esta mensagem com :white_check_mark: para confirmar ou com :x: para recusar.\nEssa ação é **irreversível**`,
+          'description': `<@!${message.author.id}> deseja realmente resetar sua pontuação? Reaja a esta mensagem com ✔ para confirmar ou com ❌ para recusar.\nEssa ação é **irreversível**`,
           'color': 15468812,
           'timestamp': moment().format()
         }
       });
 
-      await msg.react('724756300084281435');
+      await msg.react('✔');
       await msg.react('724755234387394672');
       try {
         const reactions = await msg.awaitReactions((reaction, user) => {
-          return (reaction.id == '724756300084281435' || reaction.id == '724756300084281435') && user.id ==message.author.id;
+          return (reaction.name == '✔' || reaction.id == '❌') && user.id ==message.author.id;
         }, {max: 1, time: 60000, errors: ['time']});
 
         switch (reactions.first().emoji.id) {
-          case '724756300084281435':
+          case '✔':
             player.rating = settings.defaultRating;
             player.rd = settings.defaultRd;
             player.vol = settings.defaultVol;
             player.resetCount++;
             await player.save();
             return await message.reply('Rank resetado com sucesso.');
-          case '724755234387394672':
+          case '❌':
             return await msg.delete();
         }
       } catch (e) {
