@@ -50,7 +50,6 @@ class Reset extends Command {
       await msg.react('❌');
       try {
         const reactions = await msg.awaitReactions((reaction, user) => {
-          console.log(reaction.emoji.name);
           return (reaction.emoji.name == '✅' || reaction.emoji.name == '❌') && user.id == message.author.id;
         }, {max: 1, time: 60000, errors: ['time']});
 
@@ -61,6 +60,7 @@ class Reset extends Command {
             player.vol = settings.defaultVol;
             player.resetCount++;
             await player.save();
+            await msg.delete();
             return await message.reply('Rank resetado com sucesso.');
           case '❌':
             return await msg.delete();
