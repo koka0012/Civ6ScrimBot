@@ -34,7 +34,7 @@ class Sala extends Command {
     const players = await Player.find({discordId: {$in: membersId}});
     let msg = '';
     players.forEach(_ => {
-      msg+= `${this.spaceAdd(message.guild.member(_.discordId).displayName)}${this.spaceAdd(_.rating.toFixed(0))}${this.spaceAdd(message.guild.member(_.discordId).roles.cache.find(r => roles.includes(r.name)).name || 'Colono')}`;
+      msg+= `${this.spaceAdd(message.guild.member(_.discordId).displayName, 30)}${this.spaceAdd(_.rating.toFixed(0), 10)}${message.guild.member(_.discordId).roles.cache.find(r => roles.includes(r.name)).name || 'Colono'}`;
     });
     await message.channel.send(msg,{code:'asciidoc'});
   }
