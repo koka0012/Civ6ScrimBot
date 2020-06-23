@@ -42,7 +42,7 @@ class Sala extends Command {
 
     if (membersId.length > 0) {
       membersId.forEach(_ => {
-        msg+= `${this.spaceAdd(message.guild.member(_.discordId).displayName, 30)}${this.spaceAdd(settings.defaultRating, 10)}${message.guild.member(_.discordId).roles.cache.find(r => roles.includes(r.name)).name || 'Colono'}\n`;
+        msg+= `${this.spaceAdd(message.guild.member(_).displayName, 30)}${this.spaceAdd(settings.defaultRating, 10)}${message.guild.member(_).roles.cache.find(r => roles.includes(r.name)).name || 'Colono'}\n`;
       });
     }
 
