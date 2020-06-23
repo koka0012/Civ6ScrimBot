@@ -30,7 +30,7 @@ class Sala extends Command {
 
     const channelVoice = message.guild.member(message.author.id).voice.channel;
 
-    const players = await Player.find({discordId: {$in: channelVoice.members}});
+    const players = await Player.find({discordId: {$in: channelVoice.members.toJSON()}});
     let msg = '';
     players.forEach(_ => {
       msg+= `${this.spaceAdd(message.guild.member(_.discordId).displayName)}${this.spaceAdd(_.rating.toFixed(0))}${this.spaceAdd(message.guild.member(_.discordId).roles.cache.find(r => roles.includes(r.name)).name || 'Colono')}`;
