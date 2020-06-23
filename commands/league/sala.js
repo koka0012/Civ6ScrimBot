@@ -34,16 +34,16 @@ class Sala extends Command {
     const players = await Player.find({discordId: {$in: membersId}});
     let msg = '';
     players.forEach(_ => {
-      membersId.slice(membersId.indexOf(_.id), 1);
       msg+= `${this.spaceAdd(message.guild.member(_.discordId).displayName, 30)}${this.spaceAdd(_.rating.toFixed(0), 10)}${message.guild.member(_.discordId).roles.cache.find(r => roles.includes(r.name)).name || 'Colono'}\n`;
     });
 
     const settings = this.client.getSettings(message.guild);
 
-    if (membersId.length > 0) {
-      membersId.forEach(_ => {
-        console.log(_);
-        msg+= `${this.spaceAdd(message.guild.member(_).displayName, 30)}${this.spaceAdd(settings.defaultRating, 10)}${message.guild.member(_).roles.cache.find(r => roles.includes(r.name)).name || 'Colono'}\n`;
+    const filteredMembersId = membersId.filter(_ => !players.find(x => x.discordId == _));
+
+    if (filteredMembersId.length > 0) {
+      filteredMembersId.forEach(_ => {
+        msg+= `${this.spaceAdd(message.guild.member(_).displayName, 30)}${this.spaceAdd(settings.defaultRating.toString(), 10)}${message.guild.member(_).roles.cache.find(r => roles.includes(r.name)).name || 'Colono'}\n`;
       });
     }
 
