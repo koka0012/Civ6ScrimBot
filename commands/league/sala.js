@@ -35,14 +35,14 @@ class Sala extends Command {
     let msg = '';
     players.forEach(_ => {
       membersId.slice(membersId.indexOf(_.id), 1);
-      msg+= `${this.spaceAdd(message.guild.member(_.discordId).displayName, 30)}${this.spaceAdd(_.rating.toFixed(0), 10)}${message.guild.member(_.discordId).roles.cache.find(r => roles.includes(r.name)).name || 'Colono'}\n`;
+      msg+= `${this.spaceAdd(message.guild.members.cache.get(_.discordId).displayName, 30)}${this.spaceAdd(_.rating.toFixed(0), 10)}${message.guild.members.cache.get(_.discordId).roles.cache.find(r => roles.includes(r.name)).name || 'Colono'}\n`;
     });
 
     const settings = this.client.getSettings(message.guild);
 
     if (membersId.length > 0) {
       membersId.forEach(_ => {
-        msg+= `${this.spaceAdd(message.guild.member(_).displayName, 30)}${this.spaceAdd(settings.defaultRating, 10)}${message.guild.member(_).roles.cache.find(r => roles.includes(r.name)).name || 'Colono'}\n`;
+        msg+= `${this.spaceAdd(message.guild.members.cache.get(_).displayName, 30)}${this.spaceAdd(settings.defaultRating, 10)}${message.guild.members.cache.get(_).roles.cache.find(r => roles.includes(r.name)).name || 'Colono'}\n`;
       });
     }
 
