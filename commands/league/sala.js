@@ -40,7 +40,7 @@ class Sala extends Command {
   }
 
   spaceAdd (msg, size) {
-    return `${msg}${Array(size-msg.lenght).join(' ')}`;
+    return `${msg}${Array(size-msg.length).join(' ')}`;
   }
 }
 
