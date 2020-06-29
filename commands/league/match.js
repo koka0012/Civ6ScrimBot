@@ -91,24 +91,26 @@ class Confirm extends Command {
    * @memberof Confirm
    */
   async updateRank (player, message, oldRating) {
-    if (!message) return;
-    const roles = ['Colono', 'Chefe', 'Senhor da Guerra', 'Príncipe', 'Rei', 'Imperador', 'Imortal', 'Divindade'];
+    try {
 
-    const guild = message.guild;
+      if (!message) return;
+      const roles = ['Colono', 'Chefe', 'Senhor da Guerra', 'Príncipe', 'Rei', 'Imperador', 'Imortal', 'Divindade'];
 
-    const member = await message.guild.members.fetch(`${player.discordId}`);
-    if (!member) return;
+      const guild = message.guild;
 
-    const targetRank = Math.floor(Math.max(0, player.rating - 1000) / 200);
-    const roleRank = member.roles.cache.find(r => roles.includes(r.name));
-    const targetRole = guild.roles.cache.find(r => r.name === roles[targetRank]);
+      const member = await message.guild.members.fetch(`${player.discordId}`);
+      if (!member) return;
 
-    if (roleRank && roles[targetRank] && roleRank.name != roles[targetRank]) {
-      await member.roles.remove(roleRank);
-      await member.roles.add(targetRole);
+      const targetRank = Math.floor(Math.max(0, player.rating - 1000) / 200);
+      const roleRank = member.roles.cache.find(r => roles.includes(r.name));
+      const targetRole = guild.roles.cache.find(r => r.name === roles[targetRank]);
 
-      const embed = {
-        'embed':
+      if (roleRank && roles[targetRank] && roleRank.name != roles[targetRank]) {
+        await member.roles.remove(roleRank);
+        await member.roles.add(targetRole);
+
+        const embed = {
+          'embed':
           {
             'title': 'Promoção na liga!',
             'color': 2470302,
@@ -132,14 +134,14 @@ class Confirm extends Command {
             },
             'timestamp': moment().format()
           }
-      };
+        };
   
 
-      guild.channels.cache.get('724042017675673600').send(embed);
-    } else if (!roleRank) {
-      await member.roles.add(targetRole);
-      const embed = {
-        'embed':
+        guild.channels.cache.get('724042017675673600').send(embed);
+      } else if (!roleRank) {
+        await member.roles.add(targetRole);
+        const embed = {
+          'embed':
           {
             'title': 'Atualização de pontos',
             'color': 2470302,
@@ -159,13 +161,13 @@ class Confirm extends Command {
             },
             'timestamp': moment().format()
           }
-      };
+        };
   
 
-      guild.channels.cache.get('724042017675673600').send(embed);
-    } else {
-      const embed = {
-        'embed':
+        guild.channels.cache.get('724042017675673600').send(embed);
+      } else {
+        const embed = {
+          'embed':
         {
           'title': 'Atualização de pontos',
           'color': 2470302,
@@ -185,10 +187,14 @@ class Confirm extends Command {
           },
           'timestamp': moment().format()
         }
-      };
+        };
   
-      guild.channels.cache.get('724042017675673600').send(embed);
-    };
+        guild.channels.cache.get('724042017675673600').send(embed);
+      };
+    } catch (err) {
+      console.error(err);
+    }
+
   }
 }
 
