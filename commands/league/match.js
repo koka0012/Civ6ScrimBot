@@ -96,7 +96,7 @@ class Confirm extends Command {
 
     const guild = message.guild;
 
-    const member = guild.member(player.discordId);
+    const member = await message.guild.members.fetch(`${player.discordId}`);
     if (!member) return;
 
     const targetRank = Math.floor(Math.max(0, player.rating - 1000) / 200);
