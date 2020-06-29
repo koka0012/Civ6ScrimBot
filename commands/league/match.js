@@ -68,7 +68,7 @@ class Confirm extends Command {
       if (position == 1) {
         const dRating = player.rating - oldRating;
         if (dRating < 20) {
-          player.rating = 20;
+          player.rating += 20;
         }
       }
 
