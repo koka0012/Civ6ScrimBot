@@ -45,6 +45,7 @@ class Confirm extends Command {
       
       const player = this.client.glicko.makePlayer(m.player.rating, m.player.rd, m.player.vol);
       player.playerDb = m.player;
+      player.position = m.position;
 
       rankingPlayers.push(player);
 
@@ -59,10 +60,18 @@ class Confirm extends Command {
     this.client.glicko.updateRatings(race);
 
     for (const p of rankingPlayers) {
-      const {playerDb: player} = p;
+      const {playerDb: player, position} = p;
       const oldRating = player.rating;
 
       player.rating = p.getRating();
+
+      if (position == 1) {
+        const dRating = player.rating - oldRating;
+        if (dRating < 20) {
+          player.rating = 20;
+        }
+      }
+
       player.rd = p.getRd();
       player.vol = p.getVol();
 

@@ -34,7 +34,8 @@ class Sala extends Command {
     const players = await Player.find({discordId: {$in: membersId}});
     let msg = '';
     players.forEach(_ => {
-      msg+= `${this.spaceAdd(message.guild.member(_.discordId).displayName, 30)}${this.spaceAdd(_.rating.toFixed(0), 10)}${message.guild.member(_.discordId).roles.cache.find(r => roles.includes(r.name)).name || 'Colono'}\n`;
+      const role = message.guild.member(_.discordId).roles.cache.find(r => roles.includes(r.name));
+      msg+= `${this.spaceAdd(message.guild.member(_.discordId).displayName, 30)}${this.spaceAdd(_.rating.toFixed(0), 10)}${role && role.name || 'Colono'}\n`;
     });
 
     const settings = this.client.getSettings(message.guild);
@@ -42,9 +43,11 @@ class Sala extends Command {
     const filteredMembersId = membersId.filter(_ => !players.find(x => x.discordId == _));
 
     if (filteredMembersId.length > 0) {
-      filteredMembersId.forEach(_ => {
-        msg+= `${this.spaceAdd(message.guild.member(_).displayName, 30)}${this.spaceAdd(settings.defaultRating.toString(), 10)}${message.guild.member(_).roles.cache.find(r => roles.includes(r.name)).name || 'Colono'}\n`;
-      });
+      for (const [, _] of filteredMembersId.entries()) {
+        const member = await message.guild.members.fetch(`${_}`);
+        const role = member.roles.cache.find(r => roles.includes(r.name));
+        msg+= `${this.spaceAdd(member.displayName, 30)}${this.spaceAdd(settings.defaultRating.toString(), 10)}${role && roles.name || 'Colono'}\n`;
+      }
     }
 
     await message.channel.send(msg,{code:'asciidoc'});
