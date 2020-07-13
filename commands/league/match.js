@@ -85,10 +85,10 @@ class Confirm extends Command {
         const oRating  =sub.rating;
 
         if (dRating <= 0) {
-          sub.rating = sub.rating + 20;
-          player.rating = p.getRating();
+          sub.rating = p.getRating();
+          player.rating = sub.rating + 20;;
         } else {
-          sub.rating = dRating < 20 ? sub.rating + 20 : p.getRating();
+          player.rating = dRating < 20 ? player.rating + 20 : p.getRating();
         }
 
         this.updateRank(sub, message, oRating);

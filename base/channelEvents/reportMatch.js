@@ -89,7 +89,7 @@ class ReportMatch extends ChannelEvent {
 
     let leaderboardText = '';
     match.leaderboard.forEach(l => {
-      leaderboardText += `${l.position}. <@!${l.player.discordId}> | ${l.civ} ${l.sub ? `- SUBSTITUIDO POR <@!${l.sub.discordId}>` : ''}\n`;
+      leaderboardText += `${l.position}. <@!${l.player.discordId}> | ${l.civ} ${l.sub ? `- SUBSTITIU <@!${l.sub.discordId}>` : ''}\n`;
     });
 
     const reply = {
