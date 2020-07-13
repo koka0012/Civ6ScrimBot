@@ -88,7 +88,7 @@ class Confirm extends Command {
           sub.rating = sub.rating + 20;
           player.rating = p.getRating();
         } else {
-          sub.rating = p.getRating();
+          sub.rating = dRating < 20 ? sub.rating + 20 : p.getRating();
         }
 
         this.updateRank(sub, message, oRating);
