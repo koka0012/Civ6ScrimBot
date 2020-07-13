@@ -18,7 +18,7 @@ class ReportMatch extends ChannelEvent {
   async onMessage (message) {
     const gameTypeRegex = /TIPO DE JOGO:\s*(FFA|TIME)/g;
     const hostRegex = /HOST: <@!([0-9]*)*?>/g;
-    const playerCivRegex = /<@!([0-9]*)*?>\s*([A-Z]+)/g;
+    const playerCivRegex = /<@!([0-9]*)*?>\s*([A-Z]+)(\sSUB\s<@!([0-9]*)>)?/g;
 
     const lines = message.content.split('\n').filter(_ => _ != '');
     const content = lines.join('\n').toUpperCase();
@@ -60,16 +60,36 @@ class ReportMatch extends ChannelEvent {
         player.save();
       }
 
+      let sub;
+
+      if (res[4]) {
+        let player = await Player.findOne({discordId: res[4].replace('!', '').replace('<', '').replace('>', '').replace('@', '')});
+
+        if (!player) {
+          const settings = this.client.getSettings(message.guild);
+          player = new Player();
+          player.discordId = res[4].replace('!', '').replace('<', '').replace('>', '').replace('@', '');
+          player.rating = settings.defaultRating;
+          player.rd = settings.defaultRd;
+          player.vol = settings.defaultVol;
+          player.save();
+        }
+
+        sub = player;
+        console.log(sub);
+      }
+
       match.leaderboard.push({
         position: pos,
         civ: res[2],
-        player
+        player,
+        sub
       });
     };
 
     let leaderboardText = '';
     match.leaderboard.forEach(l => {
-      leaderboardText += `${l.position}. <@!${l.player.discordId}> | ${l.civ}\n`;
+      leaderboardText += `${l.position}. <@!${l.player.discordId}> | ${l.civ} ${l.sub ? `- SUBSTITUIDO POR <@!${l.sub.discordId}>` : ''}\n`;
     });
 
     const reply = {

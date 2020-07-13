@@ -1,5 +1,5 @@
-import { Document, Model } from 'mongoose';
 import player from './Player';
+import { Document, Model } from 'mongoose';
 
 interface Match extends Document {
   type: string;
@@ -11,6 +11,7 @@ interface Match extends Document {
     position: number;
     civ: string;
     player: player;
+    sub?: player | null;
   }[];
 }
 

@@ -42,10 +42,27 @@ class Confirm extends Command {
         m.player.rd = settings.defaultRd;
         m.player.vol = settings.defaultVol;
       };
+
+      let pRating = m.player.rating;
+      let pRd = m.player.rd;
+      let pVol = m.player.vol;
+
+      if (m.sub) {
+        if (!m.sub.rating || !m.sub.rd || !m.sub.vol) {
+          m.sub.rating = settings.defaultRating;
+          m.sub.rd = settings.defaultRd;
+          m.sub.vol = settings.defaultVol;
+        };
+
+        pRating = (pRating + m.sub.rating)/2;
+        pRd = (pRd + m.sub.rd)/2;
+        pVol = (pVol + m.sub.vol)/2;
+      }
       
-      const player = this.client.glicko.makePlayer(m.player.rating, m.player.rd, m.player.vol);
+      const player = this.client.glicko.makePlayer(pRating, pRd, pVol);
       player.playerDb = m.player;
       player.position = m.position;
+      player.sub = m.sub;
 
       rankingPlayers.push(player);
 
@@ -60,17 +77,26 @@ class Confirm extends Command {
     this.client.glicko.updateRatings(race);
 
     for (const p of rankingPlayers) {
-      const {playerDb: player, position} = p;
+      const {playerDb: player, position, sub} = p;
       const oldRating = player.rating;
 
-      player.rating = p.getRating();
+      if (sub) {
+        const dRating = p.getRating() - oldRating;
+        const oRating  =sub.rating;
 
-      if (position == 1) {
-        const dRating = player.rating - oldRating;
-        if (dRating < 20) {
-          player.rating += 20;
+        if (dRating <= 0) {
+          sub.rating = sub.rating + 20;
+          player.rating = p.getRating();
+        } else {
+          sub.rating = p.getRating();
         }
+
+        this.updateRank(sub, message, oRating);
+      } else {
+        player.rating = p.getRating();
       }
+
+
 
       player.rd = p.getRd();
       player.vol = p.getVol();

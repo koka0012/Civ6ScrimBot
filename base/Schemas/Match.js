@@ -14,7 +14,8 @@ const MatchSchema = mongoose.Schema({
       vol: Number,
       rd: Number
     },
-    player: {type: mongoose.Schema.Types.ObjectId, ref: 'Player'}
+    player: {type: mongoose.Schema.Types.ObjectId, ref: 'Player'},
+    sub: {type: mongoose.Schema.Types.ObjectId, ref: 'Player'}
   }]
 });
 
